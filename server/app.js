@@ -1,30 +1,26 @@
 const server = require('http').createServer()
-const url = require('url')
 const WebSocketServer = require('ws').Server
 const wss = new WebSocketServer({ server: server })
 const express = require('express')
 const app = express()
 const port = 3000;
-const EventEmitter = require('events');
-const motionEvents = new EventEmitter();
 
-app.get('/motion', function (req, res) {
-  motionEvents.emit('motion');
-  res.send('Thanks for the motion.');
-})
-
+// Broadcast function to send a motion event to all connected clients.
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     client.send(data);
   });
 };
 
+// Express route for the webhook to signifiy that motion was received
+app.get('/motion', function (req, res) {
+  wss.broadcast('motion');
+  res.send('Thanks for the motion.');
+})
+
+// For debugging
 wss.on('connection', function connection(ws) {
   ws.send('connected');
-});
-
-motionEvents.on('motion', function(){
-  wss.broadcast('motion');
 });
 
 server.on('request', app);
