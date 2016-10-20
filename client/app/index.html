@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+    <head>
+        <title>MTSU</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+        <script src="app.js"></script>
+    </head>
+
+    <body ng-app="app">
+        <div ng-controller="AppCtrl as appCtrl">
+            <div ng-repeat="motionEvent in appCtrl.motionEvents track by $index">
+                {{ motionEvent }}
+            </div>
+        </div>
+    </body>
+</html>
